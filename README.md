@@ -42,4 +42,9 @@ docker run -v $DATADIRECTORY:/work quay.io/biocontainers/trimmomatic:0.39--1 tri
     paired_forward.fastq.gz unpaired_forward.fastq.gz\
     paired_reverse.fastq.gz unpaired_reverse.fastq.gz\
     ILLUMINACLIP:/usr/share/trimmomatic/TruSeq2-PE.fa:2:30:10\
-    SLIDINGWINDOW:4:20 HEADCROP:10
+    SLIDINGWINDOW:4:20\
+    HEADCROP:10
+
+# Move results to analyses directory
+mkdir -p $ANALYSISDIR/trimmomatic
+mv /????$/*fastq.gz $ANALYSISDIR/trimmomatic
