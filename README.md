@@ -48,3 +48,18 @@ docker run -v $DATADIRECTORY:/work quay.io/biocontainers/trimmomatic:0.39--1 tri
 # Move results to analyses directory
 mkdir -p $ANALYSISDIR/trimmomatic
 mv /????$/*fastq.gz $ANALYSISDIR/trimmomatic
+
+# make directory to store HISAT2 results
+mkdir -p $ANALYSISDIR/HISAT2
+cd $ANALYSISDIR/HISAT2
+
+# First we need to make index files and we can use docker to do that
+# reference.in= A comma-separated list of FASTA files containing the reference sequences to be aligned to. Here I am assuming reference file/files in DATADIRECTORY
+
+docker run -v $DATADIRECTORY:/work quay.io/biocontainers/hisat2:2.2.0--py36hf0b53f7_4 hisat2-build $DATADIRECTORY/reference.in ht2_indx
+
+# Use Docker container to do HISAT2
+docker run -v $DATADIRECTORY:/work quay.io/biocontainers/hisat2:2.2.0--py36hf0b53f7_4 hisat2 -x ht2-idx -1 $ANALYSISDIR/trimmomatic/paired_forward.fastq.gz -2 $ANALYSISDIR/trimmomatic/paired_reverse.fastq.gz -U $ANALYSISDIR/trimmomatic/unpaired_forward.fastq.gz,$ANALYSISDIR/trimmomatic/unpaired_reverse.fastq.gz -S result.sam
+
+
+
